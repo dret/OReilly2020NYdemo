@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE guide SYSTEM "guide.dtd">
+<?xml-stylesheet type="text/xsl" href="guide.xsl"?>
+<guide>
+  <guidelines>
+    <guideline id="change-management-policy">
+      <title>Change Management Policy</title>
+      <teaser>APIs should be explicit about how changes to the API are managed and communicated.</teaser>
+      <text>
+        <p>One of the typical goals of APIs is to cleanly and clearly decouple how a capability is provided, and how it is consumed. The API becomes the only interface that exists between the producer and the consumer. This decoupling enables a more agile landscape of evolving products and product users in general, and one of the aspects is that producers and consumers can evolve their products individually, based on their needs and timelines.</p>
+        <p>With API products and their consumers changing individually, it is important to have a well-defined and documented process how changes in the API are communicated and engineered. The goal is to balance two factors. One factor is the ease of consumption so that consumers do not have to worry about their products being disrupted because an API they are using is changing and breaking it. The second factor is the ease of production where the API product owners want to be able to evolve their product, without having to coordinate with all consumers of the API, and having to wait for them to make changes.</p>
+        <p>There are different ways how this goal can be achieved, and picking one of them depends on the value that is assigned to making changes work for every single consumer, and making it easier for the API product team to evolve their API when necessary.</p>
+      </text>
+      <what id="design-for-evolution">
+        <title>Designing for Evolution</title>
+        <teaser>Design APIs so that they can evolve without breaking API consumers.</teaser>
+        <text>
+          <p>One possible way to handle change management is to design extensibility into the API itself. By using extensible design, changes to the API can take advantage of this extensibility, and existing consumers can continue to use the API without having to adjust.</p>
+          <p>The specific design depends on the API style and technology, and on the intended extensibility. Regardless of the style and technology, design options will usually fall between these two extremes:</p>
+          <ul>
+            <li>No extensibility is the easiest design and allows consumers to fully rely on the API as it is when they write their code. However, with this design option there is no extensibility at all, making it impossible for the API producer to make any changes to the API without breaking existing consumers.</li>
+            <li>Unlimited extensibility is the hardest design and allows producers to change everything in the API, allowing them unconstrained changes to the API. However, with this design option it becomes hard for consumers to fully implement support for all possible extensions, making it hard for consumers to use the API.</li>
+          </ul>
+          <p>In practice, most extensibility designs fall somewhere in the middle between these options, trying to strike a balance between allowing some extensibility, while still making it relatively easy to consume the API without having to support a very complex extensibility model. The patterns discussed in <cite ref="robust-extensibility"/> are one possible way to design for evolution.</p>
+        </text>
+        <how id="must-ignore-semantics">
+          <title>Must Ignore Semantics</title>
+          <teaser>Allow extensions but always make it safe to ignore them.</teaser>
+          <text>
+            <p>One relatively simple way to allow extensions is to always make it safe to ignore them. This means that anything any consumer will depend on will always be there, and it will never change its meaning. In practice, this often breaks down to the following strategies:</p>
+            <ul>
+              <li>Once something is defined or added, it must stay defined. The only slight exception for this is if something is optional: This means that it may or may not appear. This means that changes to the API might make this required, or not support it any more. Both are specializations of something being optional, so this is acceptable.</li>
+              <li>Clearly indicate where extensions may appear, this makes it possible for consumers to write code that will not break when something new shows up.</li>
+              <li>Make it safe to ignore any extension, by only defining extensions that can be safely ignored without compromising current API consumers.</li>
+            </ul>
+            <p>By following this strategy, it is relatively easy to define an API that evolves in a monotonic way: It only grows, and nothing is ever removed. This is also known as the "Robustness Principle" <cite ref="rfc1122"/> that asks to "be liberal in what you accept, and conservative in what you send".</p>
+          </text>
+        </how>
+      </what>
+      <what id="immutable-api-versions">
+        <title>Immutable API Versions</title>
+        <teaser>Never change released APIs and operate as many versions in parallel es required.</teaser>
+        <text>
+          <p></p>
+        </text>
+        <how id="automated-release-versioning">
+          <title>Automated Release Versioning</title>
+          <teaser>Manage releases automatically to operate many versions in parallel and route users to their versions.</teaser>
+          <text>
+            <p></p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+    <guideline id="meaningful-error-messages">
+      <title>Meaningful Error Messages</title>
+      <teaser>Make error messages easy to understand and provide information how to fix problems.</teaser>
+      <text>
+        <p>Most APIs use styles where things can go wrong. The more helpful an API is in explaining what went wrong, and how a developer or user might be able to address the problem, the more easy the API is to use.</p>
+        <p>It is important to keep in mind that in case of error messages, a better Developer Experience (DX) with more helpful and clearly structured error messages directly translates into the possibility to create a better User Experience (UX). If the API only produces one generic error messages, that is the only thing that an application can display to the user. If, on the other hand, the error message is descriptive and machine-understandable, applications can at the very least display more meaningful error messages, and ideally even implement behavior that mitigates the effects of the error.</p>
+      </text>
+      <what id="standard-error-format">
+        <title>Standard Error Format</title>
+        <teaser>Use expressive and standardized error formats across APIs.</teaser>
+        <text>
+          <p>Error messages benefit from using a shared structure that can be used across various APIs. The structure should define the most important aspects of error messages across APIs, and should also allow extensions so that individual APIs can extend the error messages with additional details. Using a standardized error format has two main advantages.</p>
+          <p>The first advantage is that it makes it easier for developers and humans to work with various APIs. It is only necessary to understand the error message format one time, and then this understanding works across all APIs. Error messages still can be made very expressive and rich by adding details through the format's extension mechanism.</p>
+          <p>The second advantage is that it becomes possible to build tooling around the format. One form of tooling can be libraries that make it easier foe developers to produce or consume error messages. Another form of tooling is that it becomes much easier to observe error messages across the entire API landscape, making it relatively easy to build tooling that consumes and analyzes error messages for an entire API landscape.</p>
+        </text>
+        <how id="rfc-7807">
+          <title>Use RFC 7807 HTTP Problem Reports</title>
+          <teaser>For JSON and XML error messages, RFC 7807 provides a standardized and extensible error format.</teaser>
+          <text>
+            <p>The Internet standard <cite ref="rfc7807"/> defines a model for error messages for HTTP APIs. It is based on the assumption that the API is resource-oriented, and that the error message thus is a result of the standard HTTP model of interacting with resources: A client sends a request to a resource, and </p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+    <guideline id="service-description">
+      <title>Provide Service Descriptions</title>
+      <teaser>Provide machine-readable descriptions of APIs for tooling and automation.</teaser>
+      <text>
+        <p>...</p>
+      </text>
+      <what id="openapi-description">
+        <title>Provide OpenAPI Descriptions for Resource-Oriented APIs</title>
+        <teaser>For APIs following the resource-oriented API style, use OpenAPI to describe the individual resource URIs.</teaser>
+        <text>
+          <p>...</p>
+        </text>
+        <how id="swagger-ui-description">
+          <title>Use Swagger UI Descriptions</title>
+          <teaser>Swagger UI is a tool that can be used to design, discuss, and test APIs in an API-first style.</teaser>
+          <text>
+            <p>...</p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+    <guideline id="service-documentation">
+      <title>Provide Service Documentation</title>
+      <teaser>Provide service documentation that is appropriate for the maturity of the API and the intended audience.</teaser>
+      <text>
+        <p>...</p>
+      </text>
+      <what id="openapi-documentation">
+        <title>Use OpenAPI Descriptions for Resource-Oriented APIs</title>
+        <teaser>...</teaser>
+        <text>
+          <p>...</p>
+        </text>
+        <how id="swagger-ui-documentation">
+          <title>Use Swagger UI Documentation</title>
+          <teaser>...</teaser>
+          <text>
+            <p>...</p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+    <guideline id="using-timestamp">
+      <title>Using Timestamps</title>
+      <teaser>Timestamps are a popular data type and should be used in a robust and widely-supported way.</teaser>
+      <text>
+        <p>Timestamps (combining date and time information, sometimes allowing data-only formats as well) are a popular data type in APIs. However, representing these timestamps is not trivial, as date and time information is influenced by aspects such as timezones, daylight savings settings, and reference points for dates and times.</p>
+        <p>It therefore makes sense to use existing formats for timestamps that handle the complexities of date and time representation in well-defined ways. By using consistently using existing formats, it also becomes easier for developers to use libraries that allow them to handle timestamps easily and reliably.</p>
+      </text>
+      <what id="rfc-3339">
+        <title>Use RFC 3339 Timestamps</title>
+        <teaser>RFC 3339 is a robust and widely used format for timestamps on the Internet.</teaser>
+        <text>
+          <p><cite ref="rfc3339"/></p>
+        </text>
+        <how id="convert-to-rfc-3339">
+          <title>Convert Timestamps to RFC 3339</title>
+          <teaser>Convert timestamps to RFC 3339 when they are used in the context of APIs.</teaser>
+          <text>
+            <p>...</p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+    <guideline id="notification">
+      <title>Notifications in Request/Response APIs</title>
+      <teaser>Methods of adding asynchronous notifications to APIs that are primarily using a request/response style.</teaser>
+      <text>
+        <p>Many API styles are focused on request/response interaction patterns: The API provides a service that is invoked by a client and then produces a response that the client consumes and processes. This pattern underlies the major API styles such as RPC, URI, REST, and query-based. In all these styles, clients send requests that are processed on the server-side.</p>
+        <p>However, it is possible that clients want to be notified when something happens on the server side. Typical examples for this are state changes on the server side, where clients may be interested to learn about state changes of resources they are interested in. Implementing this functionality in a pure request/response interaction pattern can be wasteful, because clients then need to keep polling the server, wasting bandwidth and server resources.</p>
+        <p>In terms of interaction patterns, it would be better so implement this with a notification that is initiated by the server. For this to work, this requires some sort of subscription mechanism where a client declares interest in a (set of) published resources, so that notifications can be delivered to the subscribed clients. This general pattern is called Publish/Subscribe (PubSub), and can be implemented in a variety of ways.</p>
+      </text>
+      <what id="service-subscription">
+        <title>Service Subscription Support</title>
+        <teaser>Services individually support and manage subscriptions to notifications.</teaser>
+        <text>
+          <p></p>
+        </text>
+        <how id="websocket">
+          <title>Use the WebSocket protocol for server/client communications</title>
+          <teaser>WebSocket is a protocol originally designed to support a persistent channel between a server and a browser.</teaser>
+          <text>
+            <p>WebSocket <cite ref="rfc6455"/> was originally designed to provide a persistent channel between a browser-based Web app and a server. As the name implies, the protocol creates a simple communications channel that can be used to exchange any kind of information between a server and a client.</p>
+            <p>Defining notification mechanisms with WebSocket is a bit challenging because it does not support any PubSub functionality or any specific way how to represent and exchange notifications. This means that for using WebSockets as a notification channel, there must be a well defined model for how to subscribe to specific notifications, and how these notifications will be represented and delivered.</p>
+          </text>
+        </how>
+        <how id="websub">
+          <title>Use the WebSub protocol for server/client communications</title>
+          <teaser>WebSub is a protocol supporting a subscription and a delivery mechanism for information feeds.</teaser>
+          <text>
+            <p>WebSub <cite ref="websub"/> was originally known under the name PubSubHubbub. It started as a mechanism to support subscriptions to feeds, so that feed updates could be pushed to subscribers instead of subscribers having to pull the feed to check for updates. WebSub includes a mechanism for advertising WebSub hubs, subscribing to hubs by registering callbacks, and delivering updates to subscribers.</p>
+            <p>The older version PubSubHubbub used the Atom format <cite ref="rfc4287"/> for protocol messages, but the newer WebSub specification does not prescribe a specific message format. It simply defines how messages of different types are interchanged to implement the subscription and delivery functionality. This means that when using WebSub, it is necessary to be specific about the message formats being used.</p>
+          </text>
+        </how>
+        <how id="webhooks">
+          <title>Webhooks</title>
+          <teaser>Webhooks use HTTP communications but reverse the typical client/server roles.</teaser>
+          <text>
+            <p>Webhooks are an implementation pattern that is based on callbacks and allows the reverse of the typical client/server control flow in Web-based interactions. The pattern is based on registering a callback, which is then used by the server to notify the client when events happen. This means that for the Webhooks pattern, the typical client/server roles in Web-based interactions get reversed: The event triggers the server to call the callback. Because of this reversed control flow, Webhooks are useful to avoid polling and allow consumers to be notified of events when they happen.</p>
+            <p>While the fundamental idea of Webhooks is easy, the model leaves many questions of a PubSub mechanism open. Making callbacks reachable can be compromised by network security mechanisms. It is easy to overwhelm services with too many subscription requests. It is not defined how often and for how long callbacks should be repeatedly attempted when there are delivery problems. The exact protocol of the notification mechanism (how to represent notifications and how to use HTTP mechanisms for richer communications) is not clearly defined.</p>
+          </text>
+        </how>
+      </what>
+      <what id="messaging-platform">
+        <title>Using a Messaging Platform</title>
+        <teaser>Notification support as part of the API platform with a dedicated event-driven messaging infrastructure.</teaser>
+        <text>
+          <p>For notifications not using the request/response pattern, it is possible to use a messaging platform that allows servers to send their notifications, and allows clients to receive these notifications. There are a variety of possible messaging platforms that can be used for this scenario, and depending on the messaging platform, there may be different models of how to subscribe to notifications, and how these notifications are delivered via the messaging platform.</p>
+        </text>
+        <how id="kafka">
+          <title>Kafka as a Distributed Commit Log</title>
+          <teaser>Kafka provides access to sequence of topic-identified messages.</teaser>
+          <text>
+            <p></p>
+          </text>
+        </how>
+        <how id="rabbitmq">
+          <title>RabbitMQ as a Message Broker</title>
+          <teaser>RabbitMQ allows clients to consume messages from a managed message queue.</teaser>
+          <text>
+            <p></p>
+          </text>
+        </how>
+      </what>
+    </guideline>
+  </guidelines>
+  <resources>
+    <resource id="rfc1122" title="RFC 1122" href="https://tools.ietf.org/html/rfc1122">Robert Braden, "Requirements for Internet Hosts - Communication Layers", RFC 1122, October 1989</resource>
+    <resource id="rfc3339" title="RFC 3339" href="https://tools.ietf.org/html/rfc3339">Chris Newman and Graham Klyne, "Date and Time on the Internet: Timestamps", RFC 3339, July 2002</resource>
+    <resource id="rfc4287" title="RFC 4287" href="https://tools.ietf.org/html/rfc3339">Mark Nottingham and Robert Sayre, "The Atom Syndication Format", RFC 4287, December 2005</resource>
+    <resource id="rfc6455" title="RFC 6455" href="https://tools.ietf.org/html/rfc6455">Ian Fette and Alexey Melnikov, "The WebSocket Protocol", RFC 6455, December 2011</resource>
+    <resource id="rfc7807" title="RFC 7807" href="https://tools.ietf.org/html/rfc7807">Mark Nottingham and Erik Wilde, "Problem Details for HTTP APIs", RFC 7807, March 2016</resource>
+    <resource id="rfc8631" title="RFC 8631" href="https://tools.ietf.org/html/rfc8631">Erik Wilde, "Link Relation Types for Web Services", RFC 8631, July 2019</resource>
+    <resource id="websub" title="WebSub" href="https://www.w3.org/TR/websub/">Julien Genestoux, "WebSub", W3C Recommendation, January 2018</resource>
+    <resource id="robust-extensibility" title="Robust Extensibility" href="https://dret.typepad.com/dretblog/2016/04/robust-extensibility.html">Erik Wilde, "Patterns for Robust Extensibility", April 2016</resource>
+  </resources>
+</guide>

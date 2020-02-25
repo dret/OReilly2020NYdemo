@@ -1,0 +1,28 @@
+<!ENTITY % content '(title, teaser, text)' >
+<!ELEMENT title (#PCDATA) >
+<!ELEMENT teaser (#PCDATA) >
+<!ELEMENT text (p|ul)+ >
+<!ELEMENT p (#PCDATA|cite)* >
+<!ELEMENT ul (li)+ >
+<!ELEMENT li (#PCDATA) >
+<!ELEMENT cite EMPTY >
+<!ATTLIST cite
+  ref NMTOKEN #REQUIRED >
+
+<!ELEMENT guide (guidelines, resources) >
+<!ELEMENT guidelines (guideline+) >
+<!ELEMENT guideline (%content;, what+) >
+<!ATTLIST guideline
+  id NMTOKEN #REQUIRED >
+<!ELEMENT what (%content;, how+) >
+<!ATTLIST what
+  id NMTOKEN #REQUIRED >
+<!ELEMENT how (%content;) >
+<!ATTLIST how
+  id NMTOKEN #REQUIRED >
+<!ELEMENT resources (resource+) >
+<!ELEMENT resource (#PCDATA) >
+<!ATTLIST resource
+  id NMTOKEN #REQUIRED
+  title CDATA #REQUIRED
+  href CDATA #REQUIRED >
