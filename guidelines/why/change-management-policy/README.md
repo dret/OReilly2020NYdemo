@@ -18,7 +18,7 @@ There are different ways how this goal can be achieved, and picking one of them 
 ## Design Options:
 
 - [Designing for Evolution](what/design-for-evolution/ "Design APIs so that they can evolve without breaking API consumers.")
-- [Immutable API Versions](what/immutable-api-versions/ "Never change released APIs and operate as many versions in parallel es required.")
+- [Immutable API Versions](what/immutable-api-versions/ "Never change released APIs and operate as many versions in parallel as required.")
 
 ---
 
