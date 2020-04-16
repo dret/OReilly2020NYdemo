@@ -41,7 +41,7 @@
         <title>Immutable API Versions</title>
         <teaser>Never change released APIs and operate as many versions in parallel as required.</teaser>
         <text>
-          <p></p>
+          <p>Another possible way of managing change is to make the promise that an API version, once released, will never change. The advantage of this approach is that by definition, no client will ever break because of changes made to an API, because no changes will ever be made. The disadvantage is that any change made to the API means releasing a new version that is operated in parallel, so that existing consumers can continue to use the previous version.</p>
         </text>
         <how id="automated-release-versioning">
           <title>Automated Release Versioning</title>
