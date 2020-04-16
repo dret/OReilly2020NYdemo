@@ -39,7 +39,7 @@
       </what>
       <what id="immutable-api-versions">
         <title>Immutable API Versions</title>
-        <teaser>Never change released APIs and operate as many versions in parallel es required.</teaser>
+        <teaser>Never change released APIs and operate as many versions in parallel as required.</teaser>
         <text>
           <p></p>
         </text>
