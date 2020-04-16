@@ -2,7 +2,7 @@
 
 ## Design Option for the ["Change Management Policy" Guideline](../..)
 
-### Never change released APIs and operate as many versions in parallel es required.
+### Never change released APIs and operate as many versions in parallel as required.
 
 ---
 
